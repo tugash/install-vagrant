@@ -48,9 +48,9 @@ ver=$(cat currentVersion.txt)
 wget http://download2.rstudio.org/rstudio-server-${ver}-amd64.deb
 sudo dpkg -i rstudio-server-${ver}-amd64.deb
 rm rstudio-server-*-amd64.deb currentVersion.txt
-echo "www-port=80" | tee -a /etc/rstudio/rserver.conf
-echo "rsession-ld-library-path=/usr/local/lib" | tee -a /etc/rstudio/rserver.conf
-rstudio-server restart
+echo "www-port=80" | sudo tee -a /etc/rstudio/rserver.conf
+echo "rsession-ld-library-path=/usr/local/lib" | sudo tee -a /etc/rstudio/rserver.conf
+sudo rstudio-server restart
 
 ## shiny server
 ver=$(wget -qO- https://s3.amazonaws.com/rstudio-shiny-server-os-build/ubuntu-12.04/x86_64/VERSION)
@@ -91,10 +91,13 @@ sudo chmod 755 /home/vagrant
 sudo chmod 755 /home/vagrant/rhRunner.sh
 
 ## devtools
+sudo apt-get install -y libxml2-dev #Necessary lib
 R -e "install.packages('devtools', repos='http://cran.rstudio.com/')"
 ## datadr
 R -e "options(unzip = 'unzip', repos = 'http://cran.rstudio.com/'); library(devtools); install_github('tesseradata/datadr')"
 ## trelliscope
+#Doesn't install auto package 'munsell'
+R -e 'install.packages("munsell", repos="http://cran.rstudio.com")'
 R -e "options(unzip = 'unzip', repos = 'http://cran.rstudio.com/'); library(devtools); install_github('tesseradata/trelliscope')"
 ## testthat
 R -e "install.packages('testthat', repos='http://cran.rstudio.com/')"
